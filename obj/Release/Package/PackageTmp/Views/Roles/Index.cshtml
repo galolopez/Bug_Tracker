@@ -1,0 +1,33 @@
+﻿@model IEnumerable<Bug_Tracker.Models.RolesViewModel>
+
+@{
+    ViewBag.Title = "Role Assignments";
+}
+
+<h2>Role Assignments</h2><br />
+
+<p>
+    @*@Html.ActionLink("Create New", "Create")*@
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.RoleName)
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model) {
+        <tr>
+            @Html.HiddenFor(modelItem => item.RoleId)
+            <td>
+                @Html.DisplayFor(modelItem => item.RoleName)
+            </td>
+            <td>
+                @Html.ActionLink("Assign users", "AssignRoles", "Roles", new { id = item.RoleId }, null) |
+                @Html.ActionLink("View / Unassign users", "UnassignRoles", "Roles", new { id = item.RoleId }, null) |
+            </td>
+        </tr>
+}
+
+</table>

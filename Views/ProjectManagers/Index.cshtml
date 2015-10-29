@@ -1,0 +1,34 @@
+﻿@model IEnumerable<Bug_Tracker.Models.ProjectUsersViewModel>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Assign/Unassign Project Managers to/from Projects</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create", "Projects")
+</p>
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.ProjectName)
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            @Html.HiddenFor(modelItem => item.ProjectId)
+            <td>
+                @Html.DisplayFor(modelItem => item.ProjectName)
+            </td>
+            <td>
+                @Html.ActionLink("Assign PM to Projects", "AssignProjectManager", "ProjectManagers", new { id = item.ProjectId }, null) |
+                @Html.ActionLink("View / Unassigned PM", "UnassignProjectManager", "ProjectManagers", new { id = item.ProjectId }, null) |
+            </td>
+        </tr>
+    }
+</table>

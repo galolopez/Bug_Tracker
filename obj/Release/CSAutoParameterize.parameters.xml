@@ -1,0 +1,6 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<parameters>
+  <parameter name="AzureDataBase-Web.config Connection String" description="AzureDataBase Connection String used in web.config by the application to access the database." defaultValue="Server=coderfoundry.cloudapp.net,55555;Database=glopez-bugtracker;User ID=glopez;Password=LpzAz*123!;Trusted_Connection=False;Encrypt=True;Connection Timeout=30;TrustServerCertificate=True;" tags="SqlConnectionString">
+    <parameterEntry kind="XmlFile" scope="C:\\Users\\Galo\\documents\\visual\ studio\ 2013\\Projects\\Bug_Tracker\\Bug_Tracker\\obj\\Release\\Package\\PackageTmp\\Web\.config$" match="/configuration/connectionStrings/add[@name='AzureDataBase']/@connectionString" />
+  </parameter>
+</parameters>

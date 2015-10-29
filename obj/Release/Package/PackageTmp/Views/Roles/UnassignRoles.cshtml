@@ -1,0 +1,38 @@
+﻿@model Bug_Tracker.Models.RolesViewModel
+
+@{
+    ViewBag.Title = "UnassignRoles";
+}
+
+<h2>@(Model.RoleName + "s")</h2>
+
+@using (Html.BeginForm("UnassignRoles", "Roles", FormMethod.Post, new { encType = "multipart/form-data", name = "myform" }))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <h4>ProjectUsersViewModel</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.HiddenFor(model => model.RoleId)
+        @Html.HiddenFor(model => model.RoleName)
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Users, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.ListBoxFor(model => model.SelectedUsers, Model.Users as MultiSelectList, htmlAttributes: new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Users, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Add User(s)" class="btn btn-success" />
+            </div>
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>

@@ -1,0 +1,87 @@
+﻿@model Bug_Tracker.Models.UserViewModel
+
+@{
+    ViewBag.Title = "Dashboard";
+}
+
+<h2>Dashboard</h2><br />
+<h2>Tickets:</h2>
+<table class="table" id="first">
+    <thead>
+        <tr>
+            <th>
+                Assignation
+            </th>
+            <th>
+                Owner
+            </th>
+            <th>
+                Project
+            </th>
+            <th>
+                Priority
+            </th>
+            <th>
+                Status
+            </th>
+            <th>
+                Type
+            </th>
+            <th>
+                Title
+            </th>
+            <th>
+                Description
+            </th>
+            <th>
+                Date Created
+            </th>
+            <th>
+                Last Update
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.TicketsAssigned)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.AssignedUser.FirstName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.OwnerUser.FirstName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Project.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TicketPriority.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TicketStatus.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TicketType.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Title)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Description)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Created)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Updated)
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<script>
+    // format ALL tables by <table> tag selector
+    $('#first').DataTable();
+    // or by id... $('#TicketsTable').DataTable();
+</script>
