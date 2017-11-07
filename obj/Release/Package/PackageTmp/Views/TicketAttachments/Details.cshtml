@@ -1,4 +1,4 @@
-﻿@model Bug_Tracker.Models.TicketAttachments
+﻿@model Bug_Tracker.Models.TicketAttachment
 
 @{
     ViewBag.Title = "Details";
@@ -27,7 +27,8 @@
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.Created)
+            @Html.HiddenFor(model => model.Created)
+            @Model.Created.ToString("d")
         </dt>
 
         <dd>

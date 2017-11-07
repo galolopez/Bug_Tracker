@@ -4,14 +4,74 @@
     ViewBag.Title = "Details";
 }
 
-<h2>Details</h2>
+<center><h2>Ticket Details</h2></center><br />
+
+<div class="container body-content">
+    <div class="row">
+        <div class="col-xs-9">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="media">
+                        <div class="media-body">
+                            <h4 class="media-heading">@Html.DisplayFor(model => model.OwnerUser.DisplayName)</h4>
+                            <p class="text-muted">
+                                Submitted on: @Html.DisplayFor(model => model.Created)<br />
+                                Last Update on: @Html.DisplayFor(model => model.Updated)
+                            </p>
+                            <p class="text-muted"></p>
+                        </div>
+                    </div>
+                    <h3>@Html.DisplayFor(model => model.Title)</h3>
+                    <p>@Html.DisplayFor(model => model.Description)</p>
+                </div>            
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="row">
+                        <ul class="nav nav-tabs">
+                            <li class="active">
+                                <a href="#comments" data-toggle="tab">Comments</a>
+                            </li>
+                            <li class="active">
+                                <a href="#attachments" data-toggle="tab">Attachments</a>
+                            </li>
+                            <li class="active">
+                                <a href="#history" data-toggle="tab">History</a>
+                            </li>
+                        </ul>
+                        <div id="myTabContent" class="tab-content">
+                            <div class="tab-pane fade active in" id="comment"><br />
+                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-3">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <h4>Project: @Html.DisplayFor(model => model.Project.Name)</h4><hr />
+                    <h4>Assigned to:</h4>
+                    <h5>@Html.DisplayFor(model => model.AssignedUser.FirstName)</h5><hr />
+                    <h4>Ticket Type:</h4>
+                    <h5>@Html.DisplayFor(model => model.TicketType.Name)</h5><hr />
+                    <h4>Ticket Status:</h4>
+                    <h5>@Html.DisplayFor(model => model.TicketStatus.Name)</h5><hr />
+                    <h4>Ticket Priority:</h4>
+                    <h5>@Html.DisplayFor(model => model.TicketPriority.Name)</h5>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 <div>
-    <h4>Tickets</h4>
     <hr />
     <dl class="dl-horizontal">
         <dt>
-            @Html.DisplayNameFor(model => model.AssignedUser)
+            Assigned to
         </dt>
 
         <dd>
@@ -19,7 +79,7 @@
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.OwnerUser)
+            Owner
         </dt>
 
         <dd>
@@ -35,7 +95,7 @@
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.TicketPriority)
+            Priority
         </dt>
 
         <dd>
@@ -43,7 +103,7 @@
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.TicketStatus)
+            Status
         </dt>
 
         <dd>
@@ -51,7 +111,7 @@
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.TicketType)
+            Type
         </dt>
 
         <dd>
@@ -83,7 +143,7 @@
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.Updated)
+            Last Update
         </dt>
 
         <dd>
@@ -92,7 +152,26 @@
 
     </dl>
 </div>
+
+    @foreach(var a in Model.TicketAttachments)
+    {
+        <tr>
+            <td>
+                <a href="@Url.Content(a.FileUrl)" target="_blank">@a.FileUrl.Substring(14)</a>
+            </td>
+        </tr>
+    }
+
+    @foreach (var a in Model.TicketComments)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(model => a.Comment)
+            </td>
+        </tr>
+    }
+
 <p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
-    @Html.ActionLink("Back to List", "Index")
+    @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-default" })
+    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }, new { @class = "btn btn-primary" })
 </p>

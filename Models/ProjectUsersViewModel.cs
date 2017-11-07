@@ -9,10 +9,16 @@ namespace Bug_Tracker.Models
 {
     public class ProjectUsersViewModel
     {
-        public int ProjectId { get; set; }
-        public string ProjectName { get; set; }
-        //[Display(Name = "Developers")]
-        public MultiSelectList Users { get; set; }
-        public string[] SelectedUsers { get; set; }
+        public AssignProjectUsersViewModel AssignProjectUsers { get; set; }
+        public UnassignProjectUsersViewModel UnassignProjectUsers { get; set; }
+        public AssignProjectManagersViewModel AssignProjectManagers { get; set; }
+        public UnassignProjectManagersViewModel UnassignProjectManagers { get; set; }
+    }
+
+    public class ProjectViewModel
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public string PMName { get; set; }
     }
 }

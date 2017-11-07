@@ -1,33 +1,30 @@
-﻿@model IEnumerable<Bug_Tracker.Models.RolesViewModel>
+﻿@model IEnumerable<Bug_Tracker.Models.UserRolesViewModel>
 
 @{
     ViewBag.Title = "Role Assignments";
 }
 
-<h2>Role Assignments</h2><br />
+<div class="container" style="padding-right: 500px; padding-top: 50px">
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <center><p style="font-weight: bold; font-size: x-large">ROLE ASSIGNMENTS</p></center>
+        </div>
+        <table class="table table-hover">
+            <tr></tr>
 
-<p>
-    @*@Html.ActionLink("Create New", "Create")*@
-</p>
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.RoleName)
-        </th>
-        <th></th>
-    </tr>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    @Html.HiddenFor(modelItem => item.RoleId)
+                    <td>
+                        @Html.DisplayFor(modelItem => item.RoleName)
+                    </td>
+                    <td style="align-content: flex-end">
+                        @Html.ActionLink("Assign/Unassign Users", "RoleAssignations", "Roles", new { id = item.RoleId }, new { @class = "btn btn-primary" })
+                    </td>
+                </tr>
+            }
 
-    @foreach (var item in Model) {
-        <tr>
-            @Html.HiddenFor(modelItem => item.RoleId)
-            <td>
-                @Html.DisplayFor(modelItem => item.RoleName)
-            </td>
-            <td>
-                @Html.ActionLink("Assign users", "AssignRoles", "Roles", new { id = item.RoleId }, null) |
-                @Html.ActionLink("View / Unassign users", "UnassignRoles", "Roles", new { id = item.RoleId }, null) |
-            </td>
-        </tr>
-}
-
-</table>
+        </table>
+    </div>
+</div>

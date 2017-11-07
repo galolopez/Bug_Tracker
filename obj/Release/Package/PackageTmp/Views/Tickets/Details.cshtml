@@ -1,25 +1,24 @@
-﻿@model Bug_Tracker.Models.Tickets
+﻿@model Bug_Tracker.Models.Ticket
 
 @{
     ViewBag.Title = "Details";
 }
 
-<h2>Details</h2>
+<h2>Ticket Details</h2>
 
 <div>
-    <h4>Tickets</h4>
     <hr />
     <dl class="dl-horizontal">
         <dt>
-            @Html.DisplayNameFor(model => model.AssignedToUser.FirstName)
+            Assigned to
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.AssignedToUser.FirstName)
+            @Html.DisplayFor(model => model.AssignedUser.FirstName)
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.OwnerUser.FirstName)
+            Owner
         </dt>
 
         <dd>
@@ -27,7 +26,7 @@
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.Project.Name)
+            @Html.DisplayNameFor(model => model.Project)
         </dt>
 
         <dd>
@@ -35,7 +34,7 @@
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.TicketPriority.Name)
+            Priority
         </dt>
 
         <dd>
@@ -43,7 +42,7 @@
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.TicketStatus.Name)
+            Status
         </dt>
 
         <dd>
@@ -51,7 +50,7 @@
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.TicketType.Name)
+            Type
         </dt>
 
         <dd>
@@ -83,7 +82,7 @@
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.Updated)
+            Last Update
         </dt>
 
         <dd>
@@ -92,7 +91,26 @@
 
     </dl>
 </div>
+
+    @foreach(var a in Model.TicketAttachments)
+    {
+        <tr>
+            <td>
+                <a href="@Url.Content(a.FileUrl)" target="_blank">@a.FileUrl.Substring(14)</a>
+            </td>
+        </tr>
+    }
+
+    @foreach (var a in Model.TicketComments)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(model => a.Comment)
+            </td>
+        </tr>
+    }
+
 <p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
-    @Html.ActionLink("Back to List", "Index")
+    @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-default" })
+    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }, new { @class = "btn btn-primary" })
 </p>

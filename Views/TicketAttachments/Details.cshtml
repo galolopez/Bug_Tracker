@@ -27,7 +27,8 @@
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.Created)
+            @Html.HiddenFor(model => model.Created)
+            @Model.Created.ToString("d")
         </dt>
 
         <dd>

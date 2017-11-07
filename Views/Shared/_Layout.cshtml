@@ -3,16 +3,14 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewBag.Title - My ASP.NET Application</title>
+    <title>Scorpion Bugtracker</title>
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
-    @*@Scripts.Render("~/bundles/jquery")*@
 
     <link href="~/css/jquery.dataTables.min.css" rel="stylesheet" />
     <script src="~/Scripts/jquery-2.1.4.min.js"></script>
     <script src="~/Scripts/jquery.dataTables.min.js"></script>
-    
-    @*<script src="~/Content/bootstrap.min.js"></script>*@
+    <link rel="shortcut icon" href="~/FileUploads/scorpion4.png" />
 </head>
 <body>
     <div class="navbar navbar-inverse navbar-fixed-top">
@@ -23,34 +21,159 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                @Html.ActionLink("BugTracker", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
-            </div>
-            <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav">
-                    <li>@Html.ActionLink("Dashboard", "Dashboard", "Home")</li>
-                    <li>@Html.ActionLink("Tickets", "Index", "Tickets")</li>
-                @if (ViewContext.HttpContext.User.IsInRole("Admin"))
-                {
-                    <li>@Html.ActionLink("Projects", "Index", "Projects")</li>
-                    <li>@Html.ActionLink("PMs", "Index", "ProjectManagers")</li>
-                    <li>@Html.ActionLink("PDs", "Index", "ProjectUsers")</li>
-                    <li>@Html.ActionLink("Roles", "Index", "Roles")</li>
-                }
-                else if (ViewContext.HttpContext.User.IsInRole("Project Manager"))
-                {
-                    <li>@Html.ActionLink("Projects", "Index", "Projects")</li>
-                    <li>@Html.ActionLink("PDs", "Index", "ProjectUsers")</li>
-                }
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="@Url.Action("Dashboard", "Home")">
+                            <img src="~/FileUploads/scorpion4.png" height="25">
+                        </a>
+                    </li>
+                    @Html.ActionLink("Scorpion", "Dashboard", "Home", new { area = "" }, new { @class = "navbar-brand" })
                 </ul>
-                @Html.Partial("_LoginPartial")
             </div>
+            @if (ViewContext.HttpContext.User.IsInRole("Admin"))
+            { 
+                <div class="navbar-collapse collapse">
+                    <ul class="nav navbar-nav">
+                        <li>@Html.ActionLink("Tickets", "Index", "Tickets")</li>
+                        <li>@Html.ActionLink("Projects", "Index", "Projects")</li>
+                        <li>@Html.ActionLink("Roles", "Index", "Roles")</li>
+                    </ul>                
+                    <ul class="nav navbar-nav navbar-right">
+                        <li>
+                            <a href="@Url.Action("Dashboard", "Home")">
+                                <img src="~/FileUploads/globe.png" height="20" title="Notifications">
+                                <span class="badge bg-danger" id="notifications"></span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="@Url.Action("Index", "TicketHistories")">
+                                <img src="~/FileUploads/book3.png" height="21" title="Ticket History">
+                            </a>
+                        </li>
+                    </ul>
+                    @Html.Partial("_LoginPartial")
+                </div>
+            }
+            else if (ViewContext.HttpContext.User.IsInRole("Project Manager"))
+            {
+                <div class="navbar-collapse collapse">
+                    <ul class="nav navbar-nav">
+                        <li>@Html.ActionLink("Tickets", "Index", "Tickets")</li>
+                        <li>@Html.ActionLink("Projects", "Index", "Projects")</li>
+                    </ul>
+                    <ul class="nav navbar-nav navbar-right">
+                        <li>
+                            <a href="@Url.Action("Dashboard", "Home")">
+                                <img src="~/FileUploads/globe.png" height="20" title="Notifications">
+                                <span class="badge bg-danger" id="notifications"></span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="@Url.Action("Index", "TicketHistories")">
+                                <img src="~/FileUploads/book3.png" height="21" title="Ticket History">
+                            </a>
+                        </li>
+                    </ul>
+                    @Html.Partial("_LoginPartial")
+                </div>
+            }
+            else if (ViewContext.HttpContext.User.IsInRole("Developer"))
+            {
+                <div class="navbar-collapse collapse">
+                    <ul class="nav navbar-nav">
+                        <li>@Html.ActionLink("Tickets", "Index", "Tickets")</li>
+                        <li>@Html.ActionLink("Projects", "Index", "Projects")</li>
+                    </ul>
+                    <ul class="nav navbar-nav navbar-right">
+                        <li>
+                            <a href="@Url.Action("Dashboard", "Home")">
+                                <img src="~/FileUploads/globe.png" height="20" title="Notifications">
+                                <span class="badge bg-danger" id="notifications"></span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="@Url.Action("Index", "TicketHistories")">
+                                <img src="~/FileUploads/book3.png" height="21" title="Ticket History">
+                            </a>
+                        </li>
+                    </ul>
+                    @Html.Partial("_LoginPartial")
+                </div>
+            }
+            else if (ViewContext.HttpContext.User.IsInRole("Submitter"))
+            {
+                <div class="navbar-collapse collapse">
+                    <ul class="nav navbar-nav">
+                        <li>@Html.ActionLink("Tickets", "Index", "Tickets")</li>
+                    </ul>
+                    <ul class="nav navbar-nav navbar-right">
+                        <li>
+                            <a href="@Url.Action("Dashboard", "Home")">
+                                <img src="~/FileUploads/globe.png" height="20" title="Notifications">
+                                <span class="badge bg-danger" id="notifications"></span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="@Url.Action("Index", "TicketHistories")">
+                                <img src="~/FileUploads/book3.png" height="21" title="Ticket History">
+                            </a>
+                        </li>
+                    </ul>
+                    @Html.Partial("_LoginPartial")
+                </div>
+            }
+            else if (ViewContext.HttpContext.User.IsInRole("AdminTest"))
+            {
+                <div class="navbar-collapse collapse">
+                    <ul class="nav navbar-nav">
+                        <li>@Html.ActionLink("Tickets", "Index", "Tickets")</li>
+                        <li>@Html.ActionLink("Projects", "Index", "Projects")</li>
+                        <li>@Html.ActionLink("Roles", "Index", "Roles")</li>
+                    </ul>
+                    <ul class="nav navbar-nav navbar-right">
+                        <li>
+                            <a href="@Url.Action("Dashboard", "Home")">
+                                <img src="~/FileUploads/globe.png" height="20" title="Notifications">
+                                <span class="badge bg-danger" id="notifications"></span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="@Url.Action("Index", "TicketHistories")">
+                                <img src="~/FileUploads/book3.png" height="21" title="Ticket History">
+                            </a>
+                        </li>
+                    </ul>
+                    @Html.Partial("_LoginPartial")
+                </div>
+            }
+            else
+            {
+                <div class="navbar-collapse collapse">
+                    <ul class="nav navbar-nav">
+                    </ul>
+                    <ul class="nav navbar-nav navbar-right">
+                        <li>
+                            <a href="@Url.Action("Dashboard", "Home")">
+                                <img src="~/FileUploads/globe.png" height="20" title="Notifications">
+                                <span class="badge bg-danger" id="notifications"></span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="@Url.Action("Index", "TicketHistories")">
+                                <img src="~/FileUploads/book3.png" height="21" title="Ticket History">
+                            </a>
+                        </li>
+                    </ul>
+                    @Html.Partial("_LoginPartial")
+                </div>
+            }
         </div>
     </div>
     <div class="container body-content">
         @RenderBody()
         <hr />
         <footer>
-            <p>&copy; Galo @DateTime.Now.Year - My Bugtracker Application</p>
+            <p>&copy; Galo @DateTime.Now.Year - Scorpion Bugtracker</p>
         </footer>
     </div>
 
@@ -59,3 +182,15 @@
 
 </body>
 </html>
+
+<script>
+    $(document).ready(function () {
+        var url = '@Url.Action("GetNotifications", "Home")';
+        var postData = { name: '@User.Identity.Name' };
+
+        $.post(url, postData, function (data) {
+            $('#notifications').text(data);
+            return;
+        });
+    });
+</script>

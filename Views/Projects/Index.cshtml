@@ -1,38 +1,63 @@
-﻿@model IEnumerable<Bug_Tracker.Models.Project>
+﻿@model IEnumerable<Bug_Tracker.Models.ProjectViewModel>
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Project Assignments";
 }
 
-<h2>Index</h2>
-
-<p>
-    @Html.ActionLink("Create New", "Create")
+<p style="padding-top: 30px; padding-bottom: 30px">
+    @Html.ActionLink("New Project", "Create", null, new { @class = "btn btn-default" })
 </p>
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.Name)
-        </th>
-        <th></th>
-    </tr>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.Name)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
-            @Html.ActionLink("Details", "Details", new { id = item.Id }) |
-            @Html.ActionLink("Comments", "Index", "TicketComments") |
-            @Html.ActionLink("Attachments", "Index", "TicketAttachments") |
-            @if (ViewContext.HttpContext.User.IsInRole("Admin"))
-            {
-                @Html.ActionLink("Delete", "Delete", new { id = item.Id })
-            }
-        </td>
-    </tr>
-}
+<div class="container" style="padding-right: 200px">
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <center><p style="font-weight: bold; font-size: x-large">PROJECT ASSIGNMENTS</p></center>
+        </div>
+        <table class="table table-hover" id="fourth">
+            <thead>
+                <tr>
+                    <th>
+                        Project Name
+                    </th>
+                    <th>
+                        Current Manager
+                    </th>
+                    <th>
+                        Developers
+                    </th>
+                    <th>
+                        Project Managers
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Name)
+                        </td>
+                        <td>
+                            @item.PMName
+                        </td>
+                        <td>
+                            @Html.ActionLink("Add/Remove", "DevAssignations", "ProjectUsers", new { id = item.Id }, new { @class = "btn btn-primary" })
+                        </td>
+                        <td>
+                            @if (ViewContext.HttpContext.User.IsInRole("Admin"))
+                            {
+                                @Html.ActionLink("Add/Remove", "PMAssignations", "ProjectManagers", new { id = item.Id }, new { @class = "btn btn-warning" })
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
 
-</table>
+<script>
+    // format ALL tables by <table> tag selector
+    $('#fourth').DataTable();
+    // or by id... $('#TicketsTable').DataTable();
+</script>

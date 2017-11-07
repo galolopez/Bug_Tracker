@@ -1,93 +1,113 @@
 ﻿@model IEnumerable<Bug_Tracker.Models.Ticket>
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Project Tickets";
 }
 
-<h2>Project Tickets</h2>
-
-<p>
-    @Html.ActionLink("Create New", "Create")
+<p style="padding-top: 30px; padding-bottom: 30px">
+    @Html.ActionLink("New Ticket", "Create", null, new { @class = "btn btn-default" })
 </p>
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.AssignedUser)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.OwnerUser)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Project)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.TicketPriority)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.TicketStatus)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.TicketType)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Title)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Description)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Created)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Updated)
-        </th>
-        <th></th>
-    </tr>
 
-    @foreach (var item in Model)
-    {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.AssignedUser.FirstName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.OwnerUser.FirstName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Project.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.TicketPriority.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.TicketStatus.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.TicketType.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Title)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Description)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Created)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Updated)
-            </td>
-            <td>
-                @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
-                @Html.ActionLink("Details", "Details", new { id = item.Id }) |
-                @Html.ActionLink("Add Comment", "Create", "TicketComments") |
-                @Html.ActionLink("Add Attachment", "Create", "TicketAttachments") |
-                @if (ViewContext.HttpContext.User.IsInRole("Admin"))
+<div class="container">
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <center><p style="font-weight: bold; font-size: x-large">PROJECT TICKETS</p></center>
+        </div>
+        <table class="table table-hover" id="third">
+            <thead>
+                <tr>
+                    <th>
+                        Assignation
+                    </th>
+                    <th>
+                        Owner
+                    </th>
+                    <th>
+                        Title
+                    </th>
+                    <th>
+                        Project
+                    </th>
+                    <th>
+                        Priority
+                    </th>
+                    <th>
+                        Status
+                    </th>
+                    <th>
+                        Type
+                    </th>
+                    <th>
+                        Created
+                    </th>
+                    <th>
+                        Updated
+                    </th>
+                    <th>
+                        <center>Action</center>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
                 {
-                    @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.AssignedUser.FirstName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.OwnerUser.FirstName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Title)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Project.Name)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.TicketPriority.Name)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.TicketStatus.Name)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.TicketType.Name)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Created)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Updated)
+                        </td>
+                        <td>
+                            <a type="button" class="btn btn-default" href="@Url.Action("Edit", "Tickets", new { id = item.Id })">
+                                <span class="glyphicon glyphicon-edit" aria-hidden="true" title="Edit"></span>
+                            </a>
+                            <a type="button" class="btn btn-default" href="@Url.Action("Details", "Tickets", new { id = item.Id })">
+                                <span class="glyphicon glyphicon-eye-open" aria-hidden="true" title="Details"></span>
+                            </a>
+                            @if (ViewContext.HttpContext.User.IsInRole("Admin"))
+                            {
+                                <a type="button" class="btn btn-default" href="@Url.Action("Delete", "Tickets", new { id = item.Id })">
+                                    <span class="glyphicon glyphicon-trash" aria-hidden="true" title="Delete"></span>
+                                </a>
+                            }
+                            else if (ViewContext.HttpContext.User.IsInRole("AdminTest"))
+                            {
+                                <a type="button" class="btn btn-default" href="@Url.Action("Delete", "Tickets", new { id = item.Id })">
+                                    <span class="glyphicon glyphicon-trash" aria-hidden="true" title="Delete"></span>
+                                </a>
+                            }
+                        </td>
+                    </tr>
                 }
-            </td>
-        </tr>
-    }
-</table>
+            </tbody>
+        </table>
+    </div>
+</div>
 
+<script>
+    // format ALL tables by <table> tag selector
+    $('#third').DataTable();
+    // or by id... $('#TicketsTable').DataTable();
+</script>

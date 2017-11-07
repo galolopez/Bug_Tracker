@@ -44,5 +44,7 @@ namespace Bug_Tracker.Models
 
         [Display(Name = "Assigned Tickets")]
         public List<Ticket> TicketsAssigned { get; set; }
+
+        public List<TicketHistory> TicketNotifications { get; set; }
     }
 }

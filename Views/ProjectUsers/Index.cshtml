@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Bug_Tracker.Models.ProjectUsersViewModel>
+﻿@model IEnumerable<Bug_Tracker.Models.AssignProjectUsersViewModel>
 
 @{
     ViewBag.Title = "Index";
@@ -13,7 +13,7 @@
 <table class="table">
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model.ProjectName)
+            Project Name
         </th>
         <th></th>
     </tr>
@@ -25,8 +25,17 @@
                 @Html.DisplayFor(modelItem => item.ProjectName)
             </td>
             <td>
-                @Html.ActionLink("Assign Developers to Projects", "AssignUsers", "ProjectUsers", new { id = item.ProjectId }, null) |
-                @Html.ActionLink("View / Unassigned Projects", "UnassignUsers", "ProjectUsers", new { id = item.ProjectId }, null) |
+                @Html.ActionLink("Assign Developers", "AssignUsers", "ProjectUsers", new { id = item.ProjectId }, null) |
+                @Html.ActionLink("Unassign Developers", "UnassignUsers", "ProjectUsers", new { id = item.ProjectId }, null) |
+                @Html.ActionLink("Edit ", "Edit", "Projects", new { id = item.ProjectId }, null) | 
+                @if (ViewContext.HttpContext.User.IsInRole("Admin"))
+                {
+                    @Html.ActionLink("Assign PM to Projects", "AssignProjectManager", "ProjectManagers", new { id = item.ProjectId }, null)
+                    @Html.Raw(" | ") 
+                    @Html.ActionLink("View / Unassigned PM", "UnassignProjectManager", "ProjectManagers", new { id = item.ProjectId }, null)
+                    @Html.Raw(" | ")
+                    @Html.ActionLink("Delete", "Delete", "Projects", new { id = item.ProjectId }, null)
+                }
             </td>
         </tr>
     }

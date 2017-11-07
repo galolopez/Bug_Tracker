@@ -37,11 +37,17 @@ namespace Bug_Tracker.Controllers
         }
 
         // GET: TicketComments/Create
-        public ActionResult Create()
+        public ActionResult Create(int id)
         {
-            ViewBag.TicketId = new SelectList(db.Tickets, "Id", "Title");
-            ViewBag.UserId = new SelectList(db.Users, "Id", "FirstName");
-            return View();
+            TicketComment model = new TicketComment();
+            model.Created = new DateTimeOffset(DateTime.Now);
+            model.User = db.Users.Single(u => u.UserName == User.Identity.Name);
+            model.UserId = model.User.Id;
+            model.Ticket = db.Tickets.Find(id);
+            model.TicketId = id;
+            //ViewBag.TicketId = new SelectList(db.Tickets, "Id", "Title");
+            //ViewBag.UserId = new SelectList(db.Users, "Id", "FirstName");
+            return View(model);
         }
 
         // POST: TicketComments/Create
@@ -54,6 +60,8 @@ namespace Bug_Tracker.Controllers
             if (ModelState.IsValid)
             {
                 db.TicketComments.Add(ticketComments);
+                ticketComments.Created = DateTimeOffset.Now;
+                ticketComments.User = db.Users.Single(u => u.UserName == User.Identity.Name);
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }

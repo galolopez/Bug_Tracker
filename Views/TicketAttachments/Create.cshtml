@@ -6,7 +6,7 @@
 
 <h2>Create</h2>
 
-@using (Html.BeginForm()) 
+@using (Html.BeginForm("Create", "TicketAttachments", FormMethod.Post, new { enctype = "multipart/form-data" }))
 {
     @Html.AntiForgeryToken()
     
@@ -15,26 +15,31 @@
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         <div class="form-group">
-            @Html.LabelFor(model => model.TicketId, "TicketId", htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.HiddenFor(model => model.FileUrl)
             <div class="col-md-10">
-                @Html.DropDownList("TicketId", null, htmlAttributes: new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.TicketId, "", new { @class = "text-danger" })
+                @Html.Label("Image Upload", htmlAttributes: new { @class = "control-label col-md-2" })
+                <input name="fileUpload" type="file" class="form-control" id="fileUpload" />
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.TicketId, "Title", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.HiddenFor(model => model.TicketId)
+                @Html.DisplayFor(model => model.Ticket.Title, "", new { @class = "text-danger" })
             </div>
         </div>
 
         <div class="form-group">
             @Html.LabelFor(model => model.Created, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.Created, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Created, "", new { @class = "text-danger" })
+                @Html.HiddenFor(model => model.Created)
+                @Html.DisplayFor(model => model.Created, "", new { @class = "text-danger" })
             </div>
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.FilePath, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.FilePath, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.FilePath, "", new { @class = "text-danger" })
+                @Html.HiddenFor(model => model.FilePath)
             </div>
         </div>
 
@@ -49,16 +54,14 @@
         <div class="form-group">
             @Html.LabelFor(model => model.UserId, "UserId", htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.DropDownList("UserId", null, htmlAttributes: new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.UserId, "", new { @class = "text-danger" })
+                @Html.HiddenFor(model => model.UserId)
+                @Html.DisplayFor(model => model.User.DisplayName, "", new { @class = "text-danger" })
             </div>
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.FileUrl, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.FileUrl, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.FileUrl, "", new { @class = "text-danger" })
+                @Html.HiddenFor(model => model.FileUrl)
             </div>
         </div>
 

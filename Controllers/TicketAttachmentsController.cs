@@ -7,6 +7,7 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using Bug_Tracker.Models;
+using System.IO;
 
 namespace Bug_Tracker.Controllers
 {
@@ -37,11 +38,20 @@ namespace Bug_Tracker.Controllers
         }
 
         // GET: TicketAttachments/Create
-        public ActionResult Create()
+        public ActionResult Create(int id)
         {
+            var user = db.Users.SingleOrDefault(u => u.UserName == User.Identity.Name);
+            var attachment = new TicketAttachment
+            {
+                UserId = user.Id,
+                User = user,
+                TicketId = id,
+                Ticket = db.Tickets.Find(id),
+                Created = new DateTimeOffset(DateTime.Now)
+            };
             ViewBag.TicketId = new SelectList(db.Tickets, "Id", "Title");
             ViewBag.UserId = new SelectList(db.Users, "Id", "FirstName");
-            return View();
+            return View(attachment);
         }
 
         // POST: TicketAttachments/Create
@@ -49,10 +59,18 @@ namespace Bug_Tracker.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,TicketId,Created,FilePath,Description,UserId,FileUrl")] TicketAttachment ticketAttachments)
+        public ActionResult Create([Bind(Include = "Id,TicketId,Created,FilePath,Description,UserId,FileUrl")] TicketAttachment ticketAttachments, HttpPostedFileBase fileUpload)
         {
             if (ModelState.IsValid)
             {
+                if (fileUpload != null && fileUpload.ContentLength > 0)
+                {
+                    var fileName = Path.GetFileName(fileUpload.FileName);
+                    ticketAttachments.FilePath = Path.Combine(Server.MapPath("~/FileUploads/"), fileName);
+                    fileUpload.SaveAs(ticketAttachments.FilePath);
+                    ticketAttachments.FileUrl = "~/FileUploads/" + fileName;
+                }                
+                ticketAttachments.Created = new DateTimeOffset(DateTime.Now);
                 db.TicketAttachments.Add(ticketAttachments);
                 db.SaveChanges();
                 return RedirectToAction("Index");

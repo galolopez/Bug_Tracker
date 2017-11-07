@@ -7,6 +7,7 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using Bug_Tracker.Models;
+using System.Threading.Tasks;
 
 namespace Bug_Tracker.Controllers
 {
@@ -36,6 +37,15 @@ namespace Bug_Tracker.Controllers
             {
                 return View(tickets.Where(t => t.OwnerUser.UserName == User.Identity.Name));
             }
+        }
+
+        public ActionResult MarkNotificationSeen (int id)
+        {
+            var history = db.TicketHistories.Find(id);
+            history.NotificationSeen = true;
+            db.Entry(history).State = EntityState.Modified;
+            db.SaveChanges();
+            return RedirectToAction("Dashboard", "Home");
         }
 
         // GET: Tickets/Details/5
@@ -95,8 +105,7 @@ namespace Bug_Tracker.Controllers
             ViewBag.TicketTypeId = new SelectList(db.TicketTypes, "Id", "Name", tickets.TicketTypeId);
             return View(tickets);
         }
-
-        // GET: Tickets/Edit/5
+       
         [Authorize(Roles = "Admin, Project Manager, Developer")]
         public ActionResult Edit(int? id)
         {
@@ -128,22 +137,35 @@ namespace Bug_Tracker.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin, Project Manager, Developer")]
-        public ActionResult Edit([Bind(Include = "Id,ProjectId,TicketTypeId,TicketPriorityId,TicketStatusId,Title,Description,OwnerUserId,AssignedUserId,Created,Updated")] Ticket tickets)
+        public async Task<ActionResult> Edit([Bind(Include = "Id,ProjectId,TicketTypeId,TicketPriorityId,TicketStatusId,Title,Description,OwnerUserId,AssignedUserId,Created,Updated")] Ticket tickets)
         {            
             if (ModelState.IsValid)
             {
+                var user = await db.Users.SingleOrDefaultAsync(u => u.UserName == User.Identity.Name);
                 var changedTime = new DateTimeOffset(DateTime.Now);
                 Ticket oldTicket = (Ticket)TempData["OldTicket"];
 
                 if (tickets.AssignedUserId != oldTicket.AssignedUserId)
                 {
+                    string temp = "";
+
+                    if (oldTicket.AssignedUserId == null)
+                    {
+                        temp = "Unassigned";
+                    }
+                    else 
+                    {
+                        temp = oldTicket.AssignedUser.DisplayName;
+                    }
+                    
                     db.TicketHistories.Add(new TicketHistory
                         {
                             Changed = changedTime,
                             Property = "Assigned User",
                             TicketId = tickets.Id,
-                            OldValue = oldTicket.AssignedUser.DisplayName,
-                            NewValue = db.Users.Find(tickets.AssignedUserId).DisplayName
+                            OldValue = temp,
+                            NewValue = db.Users.Find(tickets.AssignedUserId).DisplayName,
+                            UserId = user.Id
                         });
                 }
 
@@ -156,7 +178,7 @@ namespace Bug_Tracker.Controllers
                         TicketId = tickets.Id,
                         OldValue = oldTicket.TicketType.Name,
                         NewValue = db.TicketTypes.Find(tickets.TicketTypeId).Name,
-                        UserId = tickets.AssignedUserId
+                        UserId = user.Id
                     });
                 }
 
@@ -169,7 +191,7 @@ namespace Bug_Tracker.Controllers
                         TicketId = tickets.Id,
                         OldValue = oldTicket.TicketPriority.Name,
                         NewValue = db.TicketPriorities.Find(tickets.TicketPriorityId).Name,
-                        UserId = tickets.AssignedUserId
+                        UserId = user.Id
                     });
                 }
 
@@ -181,8 +203,8 @@ namespace Bug_Tracker.Controllers
                         Property = "Ticket Status",
                         TicketId = tickets.Id,
                         OldValue = oldTicket.TicketStatus.Name,
-                        NewValue = db.TicketStatuses.Find(tickets.TicketStatus).Name,
-                        UserId = tickets.AssignedUserId
+                        NewValue = db.TicketStatuses.Find(tickets.TicketStatusId).Name,
+                        UserId = user.Id
                     });
                 }
 

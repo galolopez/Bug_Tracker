@@ -1402,7 +1402,10 @@ a.bg-warning:focus {
   background-color: #f7ecb5;
 }
 .bg-danger {
-  background-color: #f2dede;
+  background-color: #c30707;
+  top: -8px;
+  left: -12px;
+  position: relative;
 }
 a.bg-danger:hover,
 a.bg-danger:focus {
@@ -4968,8 +4971,8 @@ a.label:focus {
   text-align: center;
   white-space: nowrap;
   vertical-align: middle;
-  background-color: #777;
-  border-radius: 10px;
+  background-color: red;
+  border-radius: 25px;
 }
 .badge:empty {
   display: none;

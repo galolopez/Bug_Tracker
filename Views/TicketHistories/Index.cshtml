@@ -4,60 +4,80 @@
     ViewBag.Title = "Index";
 }
 
-<h2>Index</h2>
+<div class="container" style="padding-top: 50px">
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <center><p style="font-weight: bold; font-size: x-large">TICKET HISTORIES</p></center>
+        </div>
+        <table class="table table-hover" id="second">
+            <thead>
+                <tr>
+                    <th>
+                        Title
+                    </th>
+                    <th>
+                        Name
+                    </th>
+                    <th>
+                        Owner
+                    </th>
+                    <th>
+                        Property
+                    </th>
+                    <th>
+                        Before
+                    </th>
+                    <th>
+                        Now
+                    </th>
+                    <th>
+                        Changed
+                    </th>
+                    <th>
+                        <center>Action</center>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Ticket.Title)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.User.FirstName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Ticket.OwnerUser.FirstName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Property)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.OldValue)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.NewValue)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Changed)
+                        </td>
+                        <td>
+                            @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
+                            @Html.ActionLink("Details", "Details", new { id = item.Id }) |
+                            @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
 
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.Ticket.Title)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.User.FirstName)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Property)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.OldValue)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.NewValue)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Changed)
-        </th>
-        <th></th>
-    </tr>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.Ticket.Title)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.User.FirstName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Property)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.OldValue)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.NewValue)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Changed)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.Id }) |
-            @Html.ActionLink("Details", "Details", new { id=item.Id }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.Id })
-        </td>
-    </tr>
-}
-
-</table>
+<script>
+    // format ALL tables by <table> tag selector
+    $('#second').DataTable();
+    // or by id... $('#TicketsTable').DataTable();
+</script>

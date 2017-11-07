@@ -15,6 +15,7 @@ namespace Bug_Tracker.Controllers
         private ApplicationDbContext db = new ApplicationDbContext();
 
         // GET: TicketHistories
+        [Authorize]
         public ActionResult Index()
         {
             var ticketHistories = db.TicketHistories.Include(t => t.Ticket).Include(t => t.User);

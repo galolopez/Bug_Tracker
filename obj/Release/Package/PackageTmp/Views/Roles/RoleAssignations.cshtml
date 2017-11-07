@@ -1,0 +1,17 @@
+﻿@model Bug_Tracker.Models.RolesViewModel
+
+@{
+    ViewBag.Title = "Assignations";
+}
+
+<div class="container" style="padding-top: 75px">
+    <div>
+        @Html.ActionLink("Back to Roles", "Index", null, new { @class = "btn btn-default" })
+    </div>
+    <div class="col-sm-6">
+        @Html.Partial("_AssignRoles", Model.AssignRoles)
+    </div>
+    <div class="col-sm-6">
+        @Html.Partial("_UnassignRoles", Model.UnassignRoles)
+    </div>
+</div>

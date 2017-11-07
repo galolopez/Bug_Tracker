@@ -13,43 +13,52 @@ namespace Bug_Tracker.Controllers
         private ApplicationDbContext db = new ApplicationDbContext();
         private UserRolesHelper helper = new UserRolesHelper();
 
+        //GET: Role Assignations 
+        [Authorize(Roles = "Admin, AdminTest")]
+        public ActionResult RoleAssignations(string id)
+        {
+            // get a list of all roles in the DB
+            var role = db.Roles.Find(id);
+            // instantiate the view models
+            var model = new RolesViewModel();
+            model.AssignRoles = new AssignRolesViewModel();
+            model.UnassignRoles = new UnassignRolesViewModel();
+
+            model.AssignRoles.RoleId = role.Id;
+            model.AssignRoles.RoleName = role.Name;
+            var userRolesNotInList = helper.UsersNotInRole(role.Name);
+            model.AssignRoles.Users = new MultiSelectList(userRolesNotInList.OrderBy(m => m.DisplayName), "Id", "DisplayName", null);
+
+            model.UnassignRoles.RoleId = role.Id;
+            model.UnassignRoles.RoleName = role.Name;
+            var userRolesInList = helper.UsersInRole(role.Name);
+            model.UnassignRoles.Users = new MultiSelectList(userRolesInList.OrderBy(m => m.DisplayName), "Id", "DisplayName", null);
+            // send the model to the view
+            return View(model);
+        }
+
         // GET: Roles
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin, AdminTest")]
         public ActionResult Index()
         {
             // get a list of all roles in the DB
             var roles = db.Roles.ToList();
-            // instantiate the view model
-            var model = new List<RolesViewModel>();
+            // instantiate the view models
+            var model = new List<UserRolesViewModel>();
             // loop through all the roles in the DB and add a new RolesViewModel object for each one
             foreach(var role in roles)
             {
-                model.Add(new RolesViewModel { RoleId = role.Id, RoleName = role.Name });
+                model.Add(new UserRolesViewModel { RoleId = role.Id, RoleName = role.Name });
             }
             // send the model to the view
             return View(model);
         }
 
-        // GET: ProjectUsers/Create
-        [Authorize(Roles = "Admin")]
-        public ActionResult AssignRoles(string id)
-        {
-            var role = db.Roles.Find(id);
-            var model = new RolesViewModel();
-            model.RoleId = role.Id;
-            model.RoleName = role.Name;
-            var userRolesList = helper.UsersNotInRole(role.Name);
-
-            model.Users = new MultiSelectList(userRolesList.OrderBy(m => m.DisplayName), "Id", "DisplayName", null);
-
-            return View(model);
-        }
-
         // POST: ProjectUsers/AssignUsers
         [HttpPost]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin, AdminTest")]
         [ValidateAntiForgeryToken]
-        public ActionResult AssignRoles(RolesViewModel model)
+        public ActionResult AssignRoles(AssignRolesViewModel model)
         {
             if (ModelState.IsValid)
             {
@@ -60,31 +69,16 @@ namespace Bug_Tracker.Controllers
                         helper.AddUserToRole(userId, model.RoleName);
                     }
                 }
-                return RedirectToAction("Index", "Roles");
+                return RedirectToAction("RoleAssignations", "Roles", new { id = model.RoleId });
             }
-            return View(model);
-        }
-
-        // GET: Users/UnassignedRoles
-        [Authorize(Roles = "Admin")]
-        public ActionResult UnassignRoles(string id)
-        {
-            var role = db.Roles.Find(id);
-            var model = new RolesViewModel();
-            model.RoleId = role.Id;
-            model.RoleName = role.Name;
-            var userRolesList = helper.UsersInRole(role.Name);
-
-            model.Users = new MultiSelectList(userRolesList.OrderBy(m => m.DisplayName), "Id", "DisplayName", null);
-
             return View(model);
         }
 
         // POST: Users/AssignRoles
         [HttpPost]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin, AdminTest")]
         [ValidateAntiForgeryToken]
-        public ActionResult UnassignRoles(RolesViewModel model)
+        public ActionResult UnassignRoles(UnassignRolesViewModel model)
         {
             if (ModelState.IsValid)
             {
@@ -95,7 +89,7 @@ namespace Bug_Tracker.Controllers
                         helper.RemoveUserFromRole(id, model.RoleName);
                     }
                 }
-                return RedirectToAction("Index", "Roles");
+                return RedirectToAction("RoleAssignations", "Roles", new { id = model.RoleId });
             }
             return View(model);
         }

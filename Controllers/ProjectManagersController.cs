@@ -14,6 +14,30 @@ namespace Bug_Tracker.Controllers
         private ApplicationDbContext db = new ApplicationDbContext();
         private ProjectHelper helper = new ProjectHelper();
 
+        // GET: PMAssignations
+        [Authorize(Roles = "Admin")]
+        public ActionResult PMAssignations(int id)
+        {
+            // get a list of the projects in the DB
+            var project = db.Projects.Find(id);
+            // instantiate the view model
+            var model = new ProjectUsersViewModel();
+            model.AssignProjectManagers = new AssignProjectManagersViewModel();
+            model.UnassignProjectManagers = new UnassignProjectManagersViewModel();
+            // 
+            model.AssignProjectManagers.ProjectId = project.Id;
+            model.AssignProjectManagers.ProjectName = project.Name;
+            var PMNotOnProject = helper.ListManagersNotOnProject(project.Id);
+            model.AssignProjectManagers.Users = new MultiSelectList(PMNotOnProject.OrderBy(d => d.DisplayName), "Id", "DisplayName", null);
+            //
+            model.UnassignProjectManagers.ProjectId = project.Id;
+            model.UnassignProjectManagers.ProjectName = project.Name;
+            var PMOnProject = helper.ListManagersOnProject(project.Id);
+            model.UnassignProjectManagers.Users = new MultiSelectList(PMOnProject.OrderBy(d => d.DisplayName), "Id", "DisplayName", null);
+            
+            return View(model);
+        }
+
         // GET: ProjectUsers
         [Authorize(Roles = "Admin")]
         public ActionResult Index()
@@ -21,11 +45,11 @@ namespace Bug_Tracker.Controllers
             // get a list of all roles in the DB
             var projects = db.Projects.ToList();
             // instantiate the view model
-            var model = new List<ProjectUsersViewModel>();
+            var model = new List<ProjectViewModel>();
             // loop through all the roles in the DB and add a new RolesViewModel object for each one
             foreach (var project in projects)
             {
-                model.Add(new ProjectUsersViewModel { ProjectId = project.Id, ProjectName = project.Name });
+                model.Add(new ProjectViewModel { Id = project.Id, Name = project.Name });
             }
             // send the model to the view
             return View(model);
@@ -36,7 +60,7 @@ namespace Bug_Tracker.Controllers
         public ActionResult AssignProjectManager(int id)
         {
             var project = db.Projects.Find(id);
-            var model = new ProjectUsersViewModel { ProjectId = id, ProjectName = project.Name };
+            var model = new AssignProjectManagersViewModel { ProjectId = id, ProjectName = project.Name };
             var userProjectList = helper.ListManagersNotOnProject(id);
             model.Users = new MultiSelectList(userProjectList.OrderBy(m => m.FirstName), "Id", "FirstName", null);
 
@@ -47,18 +71,20 @@ namespace Bug_Tracker.Controllers
         [HttpPost]
         [Authorize(Roles = "Admin")]
         [ValidateAntiForgeryToken]
-        public ActionResult AssignProjectManager(ProjectUsersViewModel model)
+        public ActionResult AssignProjectManager(AssignProjectManagersViewModel model)
         {
             if (ModelState.IsValid)
             {
                 if (model.SelectedUsers != null)
                 {
-                    foreach (string userId in model.SelectedUsers)
+                    var user = helper.GetProjectManager(model.ProjectId);
+                    if (user != null)
                     {
-                        helper.AssignUserToProject(userId, model.ProjectId);
+                        helper.RemoveUserFromProject(user.Id, model.ProjectId);
                     }
+                    helper.AssignUserToProject(model.SelectedUsers[0], model.ProjectId);
                 }
-                return RedirectToAction("Index", "ProjectManagers");
+                return RedirectToAction("PMAssignations", "ProjectManagers", new { id = model.ProjectId });
             }
             return View(model);
         }
@@ -68,8 +94,8 @@ namespace Bug_Tracker.Controllers
         public ActionResult UnassignProjectManager(int id)
         {
             var project = db.Projects.Find(id);
-            var model = new ProjectUsersViewModel { ProjectId = id, ProjectName = project.Name };
-            var userProjectList = helper.ListProjectManagers(project.Id);
+            var model = new UnassignProjectManagersViewModel { ProjectId = id, ProjectName = project.Name };
+            var userProjectList = helper.ListManagersOnProject(project.Id);
             model.Users = new MultiSelectList(userProjectList.OrderBy(m => m.FirstName), "Id", "FirstName", null);
 
             return View(model);
@@ -79,7 +105,7 @@ namespace Bug_Tracker.Controllers
         [HttpPost]
         [Authorize(Roles = "Admin")]
         [ValidateAntiForgeryToken]
-        public ActionResult UnassignProjectManager(ProjectUsersViewModel model)
+        public ActionResult UnassignProjectManager(UnassignProjectManagersViewModel model)
         {
             if (ModelState.IsValid)
             {

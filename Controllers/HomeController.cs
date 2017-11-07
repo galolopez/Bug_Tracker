@@ -16,20 +16,23 @@ namespace Bug_Tracker.Controllers
             return View();
         }
 
-        public ActionResult About()
-        {
-            ViewBag.Message = "Your application description page.";
+        //[Authorize]
+        //public ActionResult About()
+        //{
+        //    ViewBag.Message = "Your application description page.";
 
-            return View();
-        }
+        //    return View();
+        //}
 
-        public ActionResult Contact()
-        {
-            ViewBag.Message = "Your contact page.";
+        //[Authorize]
+        //public ActionResult Contact()
+        //{
+        //    ViewBag.Message = "Your contact page.";
 
-            return View();
-        }
+        //    return View();
+        //}
 
+        [Authorize]
         public ActionResult Dashboard()
         {
             var user = db.Users.SingleOrDefault(u => u.UserName == User.Identity.Name);
@@ -40,11 +43,24 @@ namespace Bug_Tracker.Controllers
                 DisplayName = user.DisplayName,
                 Email = user.Email,
                 UserProjects = user.Projects.ToList(),
+                UserRoles = new List<string>(),
                 TicketsAssigned = user.TicketsAssigned.ToList(),
-                TicketsOwned = user.TicketsOwned.ToList()
+                TicketsOwned = user.TicketsOwned.ToList(),
+                TicketNotifications = db.TicketHistories.Where(h => h.NotificationSeen == false && h.UserId == user.Id).ToList()
             };
-            
+
             return View(model);
+        }
+
+        [Authorize]
+        public int? GetNotifications(string name)
+        {
+            if (name != "" && name != null)
+            {
+                var num = db.TicketHistories.Where(h => h.NotificationSeen == false && h.User.UserName == name).Count();
+                return num;
+            }
+            return null;
         }
     }
 }

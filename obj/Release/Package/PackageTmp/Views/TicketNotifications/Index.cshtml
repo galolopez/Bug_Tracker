@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Bug_Tracker.Models.TicketNotifications>
+﻿@model IEnumerable<Bug_Tracker.Models.TicketNotification>
 
 @{
     ViewBag.Title = "Index";
@@ -12,10 +12,13 @@
 <table class="table">
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model.Ticket.Title)
+            Notification
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.User.FirstName)
+            User
+        </th>
+        <th>
+            Date Created
         </th>
         <th></th>
     </tr>
@@ -23,10 +26,13 @@
 @foreach (var item in Model) {
     <tr>
         <td>
-            @Html.DisplayFor(modelItem => item.Ticket.Title)
+            @Html.DisplayFor(modelItem => item.Title)
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.User.FirstName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Changed)
         </td>
         <td>
             @Html.ActionLink("Edit", "Edit", new { id=item.Id }) |

@@ -1,4 +1,4 @@
-﻿@model Bug_Tracker.Models.Projects
+﻿@model Bug_Tracker.Models.Project
 
 @{
     ViewBag.Title = "Create";
@@ -31,5 +31,5 @@
 }
 
 <div>
-    @Html.ActionLink("Back to List", "Index")
+    @Html.ActionLink("Back to List of Projects", "Index", "Projects", null, new { @class = "btn btn-default" })
 </div>

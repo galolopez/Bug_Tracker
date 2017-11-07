@@ -1,0 +1,17 @@
+﻿@model Bug_Tracker.Models.ProjectUsersViewModel
+
+@{
+    ViewBag.Title = "PMAssignations";
+}
+
+<div class="container" style="padding-top: 75px">
+    <div>
+        @Html.ActionLink("Back to List of Projects", "Index", "Projects", null, new { @class = "btn btn-default" })
+    </div>
+    <div class="col-sm-6">
+        @Html.Partial("_AssignProjectManagers", Model.AssignProjectManagers)
+    </div>
+    <div class="col-sm-6">
+        @Html.Partial("_UnassignProjectManagers", Model.UnassignProjectManagers)
+    </div>
+</div>

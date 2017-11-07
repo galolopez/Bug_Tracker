@@ -39,6 +39,11 @@ namespace Bug_Tracker.Migrations
                 roleManager.Create(new IdentityRole { Name = "Submitter" });
             }
 
+            if (!context.Roles.Any(r => r.Name == "AdminTest"))
+            {
+                roleManager.Create(new IdentityRole { Name = "AdminTest" });
+            }
+
             var userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(context));
 
             if (!context.Users.Any(u => u.Email == "glopez19@live.com"))
@@ -160,6 +165,21 @@ namespace Bug_Tracker.Migrations
 
             userId = userManager.FindByEmail("ajensen@coderfoundry.com").Id;
             userManager.AddToRole(userId, "Submitter");
+            /*-----------------------------------------------------------------------------------------*/
+            if (!context.Users.Any(u => u.Email == "admin@test.net"))
+            {
+                userManager.Create(new ApplicationUser
+                {
+                    UserName = "administrator",
+                    Email = "admin@test.net",
+                    FirstName = "Admin",
+                    LastName = "Test",
+                    DisplayName = "Admin Test"
+                }, "Abc&123!");
+            }
+
+            userId = userManager.FindByEmail("admin@test.net").Id;
+            userManager.AddToRole(userId, "AdminTest");
             /*-----------------------------------------------------------------------------------------*/
 
             if (!context.TicketPriorities.Any(p => p.Name == "Low"))
