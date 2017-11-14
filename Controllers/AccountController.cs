@@ -114,6 +114,69 @@ namespace Bug_Tracker.Controllers
         }
 
         //
+        // Test PM Login
+        [AllowAnonymous]
+        public async Task<ActionResult> TestProjectManagerLogin(string returnUrl)
+        {
+            var result = await SignInManager.PasswordSignInAsync("manager", "Abc&123!", false, shouldLockout: false);
+            switch (result)
+            {
+                case SignInStatus.Success:
+                    return RedirectToAction("Dashboard", "Home");
+                case SignInStatus.LockedOut:
+                    return View("Lockout");
+                case SignInStatus.RequiresVerification:
+                    return RedirectToAction("SendCode", new { ReturnUrl = returnUrl, RememberMe = false });
+                case SignInStatus.Failure:
+                default:
+                    ModelState.AddModelError("", "Invalid login attempt.");
+                    return View();
+            }
+        }
+
+        //
+        // Test Developer Login
+        [AllowAnonymous]
+        public async Task<ActionResult> TestDeveloperLogin(string returnUrl)
+        {
+            var result = await SignInManager.PasswordSignInAsync("developer", "Abc&123!", false, shouldLockout: false);
+            switch (result)
+            {
+                case SignInStatus.Success:
+                    return RedirectToAction("Dashboard", "Home");
+                case SignInStatus.LockedOut:
+                    return View("Lockout");
+                case SignInStatus.RequiresVerification:
+                    return RedirectToAction("SendCode", new { ReturnUrl = returnUrl, RememberMe = false });
+                case SignInStatus.Failure:
+                default:
+                    ModelState.AddModelError("", "Invalid login attempt.");
+                    return View();
+            }
+        }
+
+        //
+        // Test Submitter Login
+        [AllowAnonymous]
+        public async Task<ActionResult> TestSubmitterLogin(string returnUrl)
+        {
+            var result = await SignInManager.PasswordSignInAsync("submitter", "Abc&123!", false, shouldLockout: false);
+            switch (result)
+            {
+                case SignInStatus.Success:
+                    return RedirectToAction("Dashboard", "Home");
+                case SignInStatus.LockedOut:
+                    return View("Lockout");
+                case SignInStatus.RequiresVerification:
+                    return RedirectToAction("SendCode", new { ReturnUrl = returnUrl, RememberMe = false });
+                case SignInStatus.Failure:
+                default:
+                    ModelState.AddModelError("", "Invalid login attempt.");
+                    return View();
+            }
+        }
+
+        //
         // GET: /Account/VerifyCode
         [AllowAnonymous]
         public async Task<ActionResult> VerifyCode(string provider, string returnUrl, bool rememberMe)
